@@ -30,14 +30,6 @@ angular.module('Quizz').controller('social', ['$scope', 'webSocket', '$http',  f
 		});
 	}
 
-	webSocket.on('social', function(data) {
-		$scope.$apply(function () {
-			console.log(data.social);
-           $scope.users = data.social;
-           $scope.$apply();
-        });
-	});
-
 	$scope.getSocial = function(){
 		$http
 		.get('/getSocial')

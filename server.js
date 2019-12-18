@@ -1,4 +1,4 @@
-var __dirname = '/home/nas02a/etudiants/inf/uapv1703219/QuizzProject/'; //variable contenant le répertoire des sources sur le serveur physique 
+var __dirname = '/home/nas02a/etudiants/inf/uapv1503420/public_html/'; //variable contenant le répertoire des sources sur le serveur physique 
 var mongoUrl = 'mongodb://localhost:27017/db';
 
 const express = require('express');
@@ -47,6 +47,7 @@ pool.connect(function(err, client, done) {
 	}); // Exécution de la requête SQL et traitement du résultat
 
 //---------------------Fonction principale---------------------------
+
 
 app.post('/login', function(request, res) {
 
@@ -316,19 +317,10 @@ io.on('connection', function(socket) {
    	socket.on('disconnect', function () {
       console.log('A user disconnected');
    		});
-
-   	setInterval(function() {
-   		selectFromTable("users", ["identifiant", "humeur", "statut"])
-		.then(function(result) {
-			//console.log(result.rows);
-			io.emit('social', {social: result.rows});
-		});
-   	}, 20000);
-
 	});
 
-http.listen(3154 , function() {
-	console.log('listening 3154');
+http.listen(4415 , function() {
+	console.log('listening 4415');
 });
 
 function notificationSend(data)
@@ -353,83 +345,3 @@ function notificationSend(data)
 		}
 	});
 }*/
-
-//-----------Utilis----------------
-
-function errorRequestPgFail(err, res) {
-	console.log('Erreur d’exécution de la requete : ' + err.stack);
-	res.status(500).send("Une erreur est survenue pendant la l'éxécution de la requête.");
-}
-
-function deleteInTable(table, varNamesConditions, varValuesConditions) {
-	sql = "DELETE FROM fredouil." + table + " WHERE ";
-	for (var i = 0; i < varNamesConditions.length; i++) {
-		sql += varNamesConditions[i] + ' $' + (i + 1) + ' AND ';
-	}
-	sql = sql.substring(0, sql.length - 5);
-	sql += ";";
-	console.log(sql);
-	return pool.query(sql, varValuesConditions);
-}
-
-function updateInTable(table, varNames, varValues, varNamesConditions, varValuesConditions) {
-	sql = "UPDATE fredouil." + table + " SET ";
-	for (var i = 0; i < varNames.length; i++) {
-		sql += varNames[i] + " = $" + (i + 1) + ", ";
-	}
-	sql = sql.substring(0, sql.length - 2);
-	if (varNamesConditions != null) {
-		sql += " WHERE ";
-		for (var i = 0; i < varNamesConditions.length; i++) {
-			sql += varNamesConditions[i] + ' $' + (i + varNames.length + 1) + ' AND ';
-		}
-		sql = sql.substring(0, sql.length - 5);
-	}
-	sql += ";";
-	console.log(sql);
-	for (var i = 0; i < varValuesConditions.length; i++) {
-		varValues.push(varValuesConditions[i]);
-	}
-
-	return pool.query(sql, varValues);
-}
-
-function selectFromTable(table, varNames, varNamesConditions, varValuesConditions, join) {
-	sql = "SELECT ";
-	for (var i = 0; i < varNames.length; i++) {
-		sql += varNames[i] + ', ';
-	}
-	sql = sql.substring(0, sql.length - 2);
-	sql += " FROM fredouil." + table;
-
-	if (varNamesConditions != null) {
-		sql += " WHERE ";
-		for (var i = 0; i < varNamesConditions.length; i++) {
-			sql += varNamesConditions[i] + ' $' + (i + 1) + ' AND ';
-		}
-		sql = sql.substring(0, sql.length - 5);
-	}
-
-	if(join != null) { sql += ' ' + join; }
-
-	sql += ";";
-	console.log(sql);
-	return pool.query(sql, varValuesConditions);
-}
-
-function insertIntoTable(table, varNames, varValues) {
-	sql = 'INSERT INTO fredouil.' + table + ' (';
-	for (var i = 0; i < varNames.length; i++) {
-	 	sql += varNames[i] + ', ';
-	} 
-	sql = sql.substring(0, sql.length - 2);
-	sql += ') VALUES (';
-	for (var i = 1; i < varValues.length + 1; i++) {
-		sql += '$' + i + ', ';
-	}
-	sql = sql.substring(0, sql.length - 2);
-	sql += ');';
-	console.log(sql);
-	return pool.query(sql, varValues);
-
-}

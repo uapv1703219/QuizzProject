@@ -2,9 +2,19 @@ angular.module('Quizz').controller('bandeau', ['$scope', 'webSocket', '$http',  
 	
 	$scope.message = "";
 	$scope.showNotification = false;
+	$scope.disparition = false;
 
 	$scope.test = function(){
-		
+	}
+
+	$scope.returnNotification = function(){
+		return $scope.showNotification;
+	}
+
+	$scope.returnDisparition = function(){
+		sleep(2000);
+		$scope.disparition = true;
+		return $scope.disparition;
 	}
 
 	webSocket.on('notification', function(data) {
@@ -15,7 +25,10 @@ angular.module('Quizz').controller('bandeau', ['$scope', 'webSocket', '$http',  
         	$scope.$apply(function () {
            $scope.showNotification = false;
         });}
-        else {$scope.showNotification = true;}
+        else {
+        	$scope.showNotification = true;
+        	$scope.disparition = false;
+        }
 	});
 }]);
 

@@ -4,29 +4,25 @@
 		<title>CERIGame</title>
 
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
 
 
 		<!-- CDN Google -->
  		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
  		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular-route.js"></script>
+ 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular-animate.js"></script>
  		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
 
  		<script src="app/loader.js"></script>
-
- 		<script type="text/javascript">
- 			//var socket = io();
- 			//socket.on('testerEvent', function(data){document.write(data.description)});
- 			//socket.emit('clientEvent', 'Sent an clientEvent !');
- 		</script>
 
  		<link rel="stylesheet" href="css/myStyle.css" />
  	
 	</head>
 	<body>
 		<div class="container-fluid">
-			<div class="row bandeau">
-				<div class="col-3" ng-controller="bandeau">
-					<p ng-show="showNotification">Notification : {{message}} </p>
+			<div class="row align-items-center bandeau">
+				<div class="col-lg-2 offset-md-1" ng-controller="bandeau" >
+					<p class="bandeau2 success animated fadeIn" ng-show="showNotification" ng-class="{'fadeOut' : returnDisparition() == true}" >Notification : {{message}} </p>
 					<button ng-click="test()">TEST</button>
 				</div>
 				<div class="col">
@@ -128,14 +124,13 @@
 
 				</div>
 				<div class="col-2 text-center" style="background-color: grey" ng-controller="social" ng-init="getHistorique()">
-					<button class="btn btn-dark btn-lg text" ng-click="switchView()">{{menu}}</button>
+					<button class="btn btn-dark btn-lg ButtSocial text" ng-click="switchView()">{{menu}}</button>
 					<div class="rounded social text-center" ng-show="showSocial" ng-init="getSocial()">
 						<h2>Social</h2>
 						<md-list-item class="md-2-line md-no-proxy _md" role="listitem">
 	          				<div class="md-list-item-text" ng-repeat="elem in users">
 	            				<h3 class="ng-binding">{{elem.identifiant}}</h3>
 	            				<p>{{elem.humeur}}</p>
-	            				<span ng-class="{greenDot: elem.statut == '1', greyDot: elem.statut == '0' || elem.statut == null}"></span>
 	            				<hr>
 	          				</div>
           				</md-list-item>
