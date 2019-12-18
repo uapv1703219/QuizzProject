@@ -52,7 +52,7 @@
 			</div>
 			<div class="row">
 				<div class="col-10" ng-controller="quizz" ng-init="getQuizz()">
-					<div class="card-deck ml-4 mt-4" ng-show="showSelect">
+					<div class="card-deck ml-4 mt-4 " ng-show="showSelect">
 						<div ng-repeat="elem in themes" style="padding-bottom: 2rem">
 							<div class="card text-center border-0" style="width: 19rem; height: 290px;">
 							  <img ng-click="quizzPrep(elem)" src="images/{{elem}}.jpg" class="rounded-circle img-fluid clickable" alt="{{elem}}">
@@ -67,7 +67,7 @@
 						<div class="col" style="background-color: grey">
 							<h1 class="align-middle">Coming sOOn</h1>
 						</div>
-						<div class="col-10">
+						<div class="col-10 showQuizz">
 							<div class="text-center mt-2 pb-5" style="height: 35%;">
 								<h1>{{leTheme}}</h1>
 								<h5>Auteur : {{auteur}}</h5>
@@ -91,7 +91,7 @@
 
 					<!-- ng-class="{ 'disabled': showNext}" -->
 					<div ng-show="showQuizz">
-						<div class="text-center mt-2 pb-5" style="height: 35%;">
+						<div class="text-center pb-5 showQuizz">
 								<h1>{{leTheme}}</h1>
 								<h5>Auteur : {{auteur}}</h5>
 								<div class="progress">
@@ -111,7 +111,7 @@
 						<button class="btn btn-dark btn-lg" ng-click="backHome()">Accueil</button>
 					</div>
 					<div ng-show="showResults">
-						<div class="text-center mt-2 pb-5" style="height: 35%;">
+						<div class="text-center pb-5 showQuizz" style="height: 35%;">
 							<h1>{{leTheme}}</h1>
 							<h5>Auteur : {{auteur}}</h5>
 

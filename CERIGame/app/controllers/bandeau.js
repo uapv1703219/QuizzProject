@@ -12,7 +12,6 @@ angular.module('Quizz').controller('bandeau', ['$scope', 'webSocket', '$http',  
 	}
 
 	$scope.returnDisparition = function(){
-		sleep(2000);
 		$scope.disparition = true;
 		return $scope.disparition;
 	}
