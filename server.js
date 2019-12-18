@@ -1,4 +1,4 @@
-var __dirname = '/home/nas02a/etudiants/inf/uapv1503420/public_html/'; //variable contenant le répertoire des sources sur le serveur physique 
+var __dirname = '/home/nas02a/etudiants/inf/uapv1703219/QuizzProject/'; //variable contenant le répertoire des sources sur le serveur physique 
 var mongoUrl = 'mongodb://localhost:27017/db';
 
 const express = require('express');
@@ -93,7 +93,7 @@ app.post('/login', function(request, res) {
 			notificationSend('Pseudo/Mot de passe Inconnu !');
 			res.status(403).send({
 					statusMsg: 'Pseudo/Mot de passe Inconnu !',
-					statusResp: true
+					statusResp: false
 			});
 		}
 			
@@ -319,8 +319,8 @@ io.on('connection', function(socket) {
    		});
 	});
 
-http.listen(4415 , function() {
-	console.log('listening 4415');
+http.listen(3154 , function() {
+	console.log('listening 3154');
 });
 
 function notificationSend(data)
