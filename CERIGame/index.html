@@ -1,20 +1,155 @@
 <!DOCTYPE html>
-<html>
-<head>
-	<title>CERIGame - Login</title>
+<html ng-app="Quizz">
+	<head>
+		<title>CERIGame</title>
 
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-</head>
-<body>
-<div class="container ">
-	<h1>CERIGAME Login</h1>
-	<form action="/login" method="post">
-		<label for="pseudo">Pseudo :</label>
-		<input type="text" name="pseudo"> <br>
-		<label for="mdp">Password :</label>
-		<input type="password" name="mdp"> <br>
-		<input type="submit" name="Login">
-	</form> 
-</div>
-</body>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+		<!-- CDN Google -->
+ 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
+ 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular-route.js"></script>
+ 		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+
+ 		<script src="app/loader.js"></script>
+
+ 		<script type="text/javascript">
+ 			//var socket = io();
+ 			//socket.on('testerEvent', function(data){document.write(data.description)});
+ 			//socket.emit('clientEvent', 'Sent an clientEvent !');
+ 		</script>
+
+ 		<link rel="stylesheet" href="css/myStyle.css" />
+ 	
+	</head>
+	<body>
+		<div class="container-fluid">
+			<div class="row bandeau">
+				<div class="col-3" ng-controller="bandeau">
+					<p ng-show="showNotification">Notification : {{message}} </p>
+					<button ng-click="test()">TEST</button>
+				</div>
+				<div class="col">
+					<p class="title text-center mb-0">THE CERIGAME</p>
+				</div>
+				<div class="col-3" ng-controller="login" ng-init="load(); getHumeur()">
+					<div ng-hide="isLogged">
+						<form ng-submit="login()">
+						<label for="username">Pseudo :</label>
+						<input class="" type="text" name="username" ng-model="username" placeholder="Username"> <br>
+						<label for="mdp">Password :</label>
+						<input type="password" name="password" ng-model="password" placeholder="Password"> <br>
+						<input class="btn btn-dark mb-1" type="submit" value="Go!">
+					</form>
+					</div>
+					<div ng-show="isLogged">
+						<p>Pseudo : {{user}}</p>
+						<p>Humeur : {{humeur}}</p>
+						<p class="annotation">Dernière connexion : {{lastConnexion}}</p>
+						<button class="btn btn-dark mb-1" ng-click="logout()">Logout</button>
+						<form ng-submit="setHumeur()">
+							<input class="" type="text" name="humeurTxt" ng-model="humeurTxt" placeholder="D'humeur changeante ?">
+							<input class="btn btn-dark mb-1" type="submit" value="Set">
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-10" ng-controller="quizz" ng-init="getQuizz()">
+					<div class="card-deck ml-4 mt-4" ng-show="showSelect">
+						<div ng-repeat="elem in themes" style="padding-bottom: 2rem">
+							<div class="card text-center border-0" style="width: 19rem; height: 290px;">
+							  <img ng-click="quizzPrep(elem)" src="images/{{elem}}.jpg" class="rounded-circle img-fluid clickable" alt="{{elem}}">
+							  <div class="card-body">
+							    <span class="card-text clickable" ng-click="quizzPrep(elem)">{{elem}}</span>
+							  </div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row" ng-show="showQuizzPrep">
+						<div class="col" style="background-color: grey">
+							<h1 class="align-middle">Coming sOOn</h1>
+						</div>
+						<div class="col-10">
+							<div class="text-center mt-2 pb-5" style="height: 35%;">
+								<h1>{{leTheme}}</h1>
+								<h5>Auteur : {{auteur}}</h5>
+								<img src="images/{{leTheme}}.jpg" class="rounded img-fluid" style="height: 100%;">
+							</div>
+							<div class="text-center" style="margin-top: 5%"> <!-- Selection des levels -->
+								<button ng-click="setFacile()" class="btn btn-success btn-lg mr-4" style="width: 8rem">Facile</button>
+								<button ng-click="setMoyen()" class="btn btn-warning btn-lg" style="width: 8rem">Moyen</button>
+								<button ng-click="setDifficile()" class="btn btn-danger btn-lg ml-4" style="width: 8rem">Difficile</button>
+								<br>
+								<span><b>Multiplicateur : {{mult}}% Nombre de réponses possibles : {{nbRep}}</b></span>
+							</div>
+							<div class="text-center mt-4">
+								<button class="btn btn-success btn-lg mr-4" ng-click="launch()">GO !</button>
+								<button class="btn btn-dark btn-lg" ng-click="backHome()">Accueil</button>
+							</div>
+							
+						</div>
+					</div>
+
+
+					<!-- ng-class="{ 'disabled': showNext}" -->
+					<div ng-show="showQuizz">
+						<div class="text-center mt-2 pb-5" style="height: 35%;">
+								<h1>{{leTheme}}</h1>
+								<h5>Auteur : {{auteur}}</h5>
+								<div class="progress">
+  									<div class="progress-bar" role="progressbar" style="width: {{progress}};" aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100">{{progress}}</div>
+								</div>
+								<span>{{cptQuestion}}/{{nbQuestions}}</span>
+								<span class="ml-4">Score = {{score}}</span>
+								<p>{{laQuestion}}</p>
+								<button ng-click="envoieReponse(elem)" class="mr-2"  ng-disabled="showNext" ng-repeat="elem in lesReponses">{{elem}}</button>
+								<div ng-show="showNext">
+									<p>{{result}}</p>
+									<p>{{anecdote}}</p>
+									<button ng-click="nextQuestion()">Next</button>
+								</div>
+								
+							</div>
+						<button class="btn btn-dark btn-lg" ng-click="backHome()">Accueil</button>
+					</div>
+					<div ng-show="showResults">
+						<div class="text-center mt-2 pb-5" style="height: 35%;">
+							<h1>{{leTheme}}</h1>
+							<h5>Auteur : {{auteur}}</h5>
+
+							<span>Bravo, vous avez réaliser ce quizz avec un score de : {{score}}</span><br>
+							<span>Vous avez réalisé ce quizz en un temps de {{tempsTotal}}ms</span><br>
+							<span>Rejouez pour avoir un meilleur score ! Ou vous pouvez choisir un autre quizz !</span><br>
+							<button class="btn btn-dark btn-lg" ng-click="backHome()">Accueil</button>
+						</div>
+					</div>
+
+				</div>
+				<div class="col-2 text-center" style="background-color: grey" ng-controller="social" ng-init="getHistorique()">
+					<button class="btn btn-dark btn-lg text" ng-click="switchView()">{{menu}}</button>
+					<div class="rounded social text-center" ng-show="showSocial" ng-init="getSocial()">
+						<h2>Social</h2>
+						<md-list-item class="md-2-line md-no-proxy _md" role="listitem">
+	          				<div class="md-list-item-text" ng-repeat="elem in users">
+	            				<h3 class="ng-binding">{{elem.identifiant}}</h3>
+	            				<p>{{elem.humeur}}</p>
+	            				<span ng-class="{greenDot: elem.statut == '1', greyDot: elem.statut == '0' || elem.statut == null}"></span>
+	            				<hr>
+	          				</div>
+          				</md-list-item>
+        <div class="md-secondary-container"></div></md-list-item>
+					</div>
+					<div class="rounded social text-center" ng-show="showHistorique">
+						<h2>Historique</h2>
+						<div ng-repeat="elem in historique">
+							<p>Score: {{elem.score}} | {{elem.temps}}ms</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
 </html>
+

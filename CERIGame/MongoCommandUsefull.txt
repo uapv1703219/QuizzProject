@@ -1,0 +1,7 @@
+db.quizz.find( {} , {thème: 1} ) => Trouve tous les thèmes | select thème from Quizz
+
+db.quizz.findOne() => retourne la première itération de la base
+
+db.quizz.find() => retourne toutes les entrées, (pas très lisible);
+
+db.quizz.find( {thème : 'Star Wars'}) => retourne tous le contenu du document star wars | select * from Quizz where thème = 'Star Wars';
