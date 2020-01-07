@@ -1,7 +1,7 @@
 angular.module('Quizz').controller('quizz', ['$scope', '$http', function($scope,  $http){
 
 	$scope.showSelect = true;
-	$scope.showQuizzPrep = false;
+	$scope.showQuizzPrep = true; // TODO : à remettre false !
 	$scope.showQuizz = false;
 	$scope.showNext = false;
 	$scope.showResults = false;
