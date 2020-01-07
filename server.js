@@ -326,6 +326,23 @@ app.post('/defi', function(request, res) {
 
 });
 
+app.get('/getHistDefis', function(request, res) {
+	var sql = "SELECT * FROM fredouil.hist_defi WHERE id_users_gagnant = " + request.query.id + " OR id_users_perdant = " + request.query.id + " ;";
+	pool.query(sql, (err, result) => {
+		//console.log(result.rows[0]); //DEBUG
+		if(err){
+			console.log('Erreur d’exécution de la requete' + err.stack);
+			res.status(500).send("Une erreur est survenue pendant la l'éxécution de la requête.");
+		}
+		else
+		{
+			res.status(200).send({
+				data: result
+			});
+		}
+	});
+});
+
 //-----------------WEB SOCKETS--------------------------
 
 io.on('connection', function(socket) {

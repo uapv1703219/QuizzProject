@@ -5,6 +5,13 @@ angular.module('Quizz').controller('bandeau', ['$scope', 'webSocket', '$http',  
 	$scope.disparition = false;
 
 	$scope.test = function(){
+		$http
+		.get('/getHistDefis', {
+			params: {id: localStorage.getItem('id')}
+		})
+		.then(function(response) {
+			console.log(response);
+		});
 	}
 
 	$scope.returnNotification = function(){
