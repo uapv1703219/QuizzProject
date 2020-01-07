@@ -136,6 +136,14 @@ angular.module('Quizz').controller('quizz', ['$scope', '$http', function($scope,
 		}
 	}
 
+	$scope.defi = function() {
+		$http
+		.post('/defi', {'id_user_defiant': 29,
+						'id_user_defie': 29,
+						'score_user_defiant': $scope.score,
+						'theme_quizz' : $scope.leTheme});
+	}
+
 	$scope.backHome = function() {
 		$scope.score = 0;
 		$scope.showSelect = true;

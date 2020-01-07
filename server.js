@@ -305,6 +305,26 @@ app.get('/getSocial', function(request, res) {
 	});
 });
 
+app.post('/defi', function(request, res) {
+	//console.log(request.body);
+	MongoClient.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true }, function(error, client) {
+	    if (error) 
+	    {
+	    	throw error;
+	    	res.status(500).send();
+	    }
+	    else
+	    {
+	    	const db = client.db("db");
+	    	db.collection("quizz").insertOne(request.body, function(err, result) {
+    			res.status(201).send();
+			});
+			client.close();
+		}
+	});
+
+});
+
 //-----------------WEB SOCKETS--------------------------
 
 io.on('connection', function(socket) {
