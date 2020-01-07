@@ -320,6 +320,7 @@ app.post('/defi', function(request, res) {
     			res.status(201).send();
 			});
 			client.close();
+			notificationSend("Défi créé !");
 		}
 	});
 
@@ -350,6 +351,17 @@ function notificationSend(data)
 		io.emit('notification', { description: ""});
 	}, 5000);
 }
+
+setInterval(function() {
+	var sql = "SELECT identifiant, humeur, statut FROM fredouil.users;";
+	pool.query(sql, (err, result) => {
+		//console.log("result");
+		io.emit('social', {users: result.rows});
+	});
+
+	
+}, 5000);
+
 
 /*function getClient() {
 	MongoClient.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true }, function(error, client) {
