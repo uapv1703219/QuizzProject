@@ -305,6 +305,27 @@ app.get('/getSocial', function(request, res) {
 	});
 });
 
+app.post('/defi', function(request, res) {
+	//console.log(request.body);
+	MongoClient.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true }, function(error, client) {
+	    if (error) 
+	    {
+	    	throw error;
+	    	res.status(500).send();
+	    }
+	    else
+	    {
+	    	const db = client.db("db");
+	    	db.collection("quizz").insertOne(request.body, function(err, result) {
+    			res.status(201).send();
+			});
+			client.close();
+			notificationSend("Défi créé !");
+		}
+	});
+
+});
+
 //-----------------WEB SOCKETS--------------------------
 
 io.on('connection', function(socket) {
@@ -330,6 +351,21 @@ function notificationSend(data)
 		io.emit('notification', { description: ""});
 	}, 5000);
 }
+
+setInterval(function() {
+	var sql = "SELECT identifiant, humeur, statut FROM fredouil.users;";
+	pool.query(sql, (err, result) => {
+		//console.log("result");
+		io.emit('social', {users: result.rows});
+	});
+//TODO : 
+/*
+Check every 5 sec, list of defis => Id session
+Websocket if defis détécté.
+*/
+
+}, 5000);
+
 
 /*function getClient() {
 	MongoClient.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true }, function(error, client) {

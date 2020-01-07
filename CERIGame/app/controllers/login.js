@@ -18,7 +18,7 @@ angular.module('Quizz').controller('login',  ['$scope', 'auth', '$http', functio
 			$scope.connexionStatus = "Connected";
 			$scope.user = getUserFromLocalStorage();
 			$scope.lastConnexion = localStorage.getItem('session.lastConnexion');
-			$scope.humeur = "Coming sOOn";
+			$scope.getHumeur();
 			//alert(data.statusMsg);
 		});
 
@@ -48,6 +48,7 @@ angular.module('Quizz').controller('login',  ['$scope', 'auth', '$http', functio
 			//console.log(response.data.data.rows);
 		});
 	}
+
     function getUserFromLocalStorage() {	//Enlève les guillments du local storage
 		var tmp = localStorage.getItem('session.user');
 		if(tmp != null)

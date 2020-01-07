@@ -36,8 +36,14 @@ angular.module('Quizz').controller('social', ['$scope', 'webSocket', '$http',  f
 		.then(function(response) {
 			//console.log(response);
 			$scope.users = response.data.data.rows;
-			console.log($scope.users);
+			//console.log($scope.users);
 		});
 	}
+
+	webSocket.on('social', function(data) {
+		$scope.$apply(function () {
+           $scope.users = data.users;
+        });
+	});
 
 }]);

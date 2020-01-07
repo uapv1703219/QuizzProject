@@ -19,7 +19,7 @@ angular.module('Quizz').service('session', [function(){
 		//console.log('Bdestroy :' + this.user);
 		this._user = null;
 		//console.log('destroy :' + this._user);
-		//localStorage.removeItem('session.user');
+		localStorage.removeItem('session.user');
 	}
 	
 }]);
