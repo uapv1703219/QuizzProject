@@ -289,7 +289,7 @@ app.get('/getHumeur', function(request, res) {
 });
 
 app.get('/getSocial', function(request, res) {
-	var sql = "SELECT identifiant, humeur, statut FROM fredouil.users;";
+	var sql = "SELECT identifiant, humeur, statut FROM fredouil.users ORDER BY statut DESC NULLS LAST;";
 	pool.query(sql, (err, result) => {
 		//console.log(result.rows[0]); //DEBUG
 		if(err){
@@ -370,7 +370,7 @@ function notificationSend(data)
 }
 
 setInterval(function() {
-	var sql = "SELECT identifiant, humeur, statut FROM fredouil.users;";
+	var sql = "SELECT identifiant, humeur, statut FROM fredouil.users ORDER BY statut DESC NULLS LAST;";
 	pool.query(sql, (err, result) => {
 		//console.log("result");
 		io.emit('social', {users: result.rows});
