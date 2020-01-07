@@ -358,8 +358,12 @@ setInterval(function() {
 		//console.log("result");
 		io.emit('social', {users: result.rows});
 	});
+//TODO : 
+/*
+Check every 5 sec, list of defis => Id session
+Websocket if defis détécté.
+*/
 
-	
 }, 5000);
 
 
