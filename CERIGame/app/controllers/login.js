@@ -33,8 +33,8 @@ angular.module('Quizz').controller('login',  ['$scope', 'auth', '$http', functio
 
 	$scope.setHumeur = function() {
 		$http.
-		post('/setHumeur', {'id': localStorage.getItem('id'), 'humeur' : $scope.humeurTxt});
-		$scope.humeur = $scope.humeurTxt;
+		post('/setHumeur', {'id': localStorage.getItem('id'), 'humeur' : $scope.humeur});
+		$scope.humeur = $scope.humeur;
 	}
 
 	$scope.getHumeur = function() {

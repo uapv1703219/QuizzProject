@@ -9,10 +9,8 @@
 }
 
 .bandeau input {
-	width: 65%;
 	clear: both;
 	float: right;
-	margin-right:7%;
 }
 
 .bandeau2 
@@ -53,10 +51,13 @@
 .social {
   margin-top: 10px;
   padding: 5%;
-  margin-right: 5%;
   background-color: lightgrey;
   height: 100vh;
   overflow: auto;
+}
+
+.social2 {
+  margin-left: 10px;
 }
 
 .ButtSocial{

@@ -1,7 +1,7 @@
 angular.module('Quizz').controller('quizz', ['$scope', 'webSocket', '$http', function($scope, webSocket,  $http){
 
 	$scope.showSelect = true;
-	$scope.showQuizzPrep = false;
+	$scope.showQuizzPrep = false; // TODO : à remettre false !
 	$scope.showQuizz = false;
 	$scope.showNext = false;
 	$scope.showResults = false;
