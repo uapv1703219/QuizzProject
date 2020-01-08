@@ -359,8 +359,27 @@ app.get('/getDefis', function(request, res) {
 				res.status(200).send({
 					data : results
 				});
-			});
+			}); 
 			client.close();
+		}
+	});
+});
+
+app.get('/defiRefus', function(request, res) {
+	MongoClient.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true }, function(error, client) {
+	    if (error) 
+	    {
+	    	throw error;
+	    	res.status(500).send();
+	    }
+	    else
+	    {
+	    	const db = client.db("db");
+			dbo.collection("defis").deleteOne({ id_user_defie : request.params.defie_id, id_user_defiant : request.params.defiant_id } function(err, obj) {
+				notificationSend("Défis rejeté !");
+				res.status(200).send();
+				client.close();
+			});
 		}
 	});
 });

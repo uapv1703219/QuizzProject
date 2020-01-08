@@ -197,6 +197,11 @@ angular.module('Quizz').controller('quizz', ['$scope', 'webSocket', '$http', fun
 		return ret.sort(() => Math.random() - 0.5);
 	}
 
+	$scope.defisRefus = function(data) {
+		$http
+		.get("/defiRefus", { params: {'defie_id' : }})
+	}
+
 	setInterval(function() {
 		console.log('5sec');
 		$http
