@@ -1,7 +1,7 @@
 angular.module('Quizz').controller('quizz', ['$scope', '$http', function($scope,  $http){
 
 	$scope.showSelect = true;
-	$scope.showQuizzPrep = false; // TODO : à remettre false !
+	$scope.showQuizzPrep = false;
 	$scope.showQuizz = false;
 	$scope.showNext = false;
 	$scope.showResults = false;
@@ -29,6 +29,12 @@ angular.module('Quizz').controller('quizz', ['$scope', '$http', function($scope,
 	var tempsBegin;
 	var tempsEnd;
 	$scope.tempsTotal = 0;
+
+	$scope.users = null;
+	$scope.idDefier = 0;
+
+	$scope.showDefi = true;
+	$scope.showSocial = false;
 
 	$scope.getQuizz = function() {
 		$http
@@ -138,8 +144,8 @@ angular.module('Quizz').controller('quizz', ['$scope', '$http', function($scope,
 
 	$scope.defi = function() {
 		$http
-		.post('/defi', {'id_user_defiant': 29,
-						'id_user_defie': 29,
+		.post('/defi', {'id_user_defiant': localStorage.getItem('id'),
+						'id_user_defie': $scope.idDefier,
 						'score_user_defiant': $scope.score,
 						'theme_quizz' : $scope.leTheme});
 	}
@@ -192,5 +198,19 @@ angular.module('Quizz').controller('quizz', ['$scope', '$http', function($scope,
 		}
 		
 		return ret.sort(() => Math.random() - 0.5);
+	}
+
+	$scope.getSocial = function(){
+		$http
+		.get('/getSocial')
+		.then(function(response) {
+			//console.log(response);
+			$scope.users = response.data.data.rows;
+			//console.log($scope.users);
+		});
+	}
+
+	$scope.changeId = function(data){
+		$scope.idDefier = data;
 	}
 }]);

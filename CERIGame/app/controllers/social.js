@@ -4,6 +4,7 @@ angular.module('Quizz').controller('social', ['$scope', 'webSocket', '$http',  f
 	$scope.showSocial = true;
 	$scope.showHistorique = false;
 	$scope.users = null;
+	$scope.showResults = false;
 
 	$scope.switchView = function() {
 		$scope.showSocial = !$scope.showSocial;

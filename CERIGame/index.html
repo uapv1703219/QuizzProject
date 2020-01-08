@@ -19,6 +19,7 @@
  	
 	</head>
 	<body>
+
 		<div class="container-fluid">
 			<div class="row align-items-center bandeau">
 				<div class="col-lg-3 offset-md-1 fixed-top" ng-controller="bandeau" >
@@ -71,9 +72,33 @@
 			</div>
 			<div class="row">
 				<div class="col-10" ng-controller="quizz" ng-init="getQuizz()">
-					<div class="card-deck ml-4 mt-4 " ng-show="showSelect">
-						<div ng-repeat="elem in themes" style="padding-bottom: 2rem">
-							<div class="card text-center border-0" style="width: 19rem; height: 290px;">
+					<!-- Menu Defi -->
+					<div class="row">
+						<div class="col-2" style="background-color: grey">
+							<button class="btn btn-dark btn-lg ButtSocial text" style="margin-left: 2em">Menu</button>
+							<div class="rounded social text-center" ng-show="showSocial">
+								<h2>Social</h2>
+								<md-list-item class="md-2-line md-no-proxy _md" role="listitem">
+				          			<div class="md-list-item-text" ng-repeat="elem in defis">
+				            			<h3 class="ng-binding">Blabla</h3>
+				            			<hr>
+				            			{{elem}}
+				          			</div>
+			          			</md-list-item>
+			        			<div class="md-secondary-container">	
+			        			</div>
+							</div>
+							<div class="rounded social social2 text-center" ng-show="showDefi">
+								<h2>Défi</h2>
+								<div>
+									<p>Score</p>
+								</div>
+							</div>
+						</div>
+						<!-- -->
+					 <div class="col-9 card-deck ml-4 mt-4" ng-show="showSelect">
+						<div ng-repeat="elem in themes" style="padding-bottom: 2rem; float:right">
+							<div class="card text-center border-0" style="width: 17rem; height: 290px;">
 							  <img ng-click="quizzPrep(elem)" src="images/{{elem}}.jpg" class="rounded-circle img-fluid clickable" alt="{{elem}}">
 							  <div class="card-body">
 							    <span class="card-text clickable" ng-click="quizzPrep(elem)">{{elem}}</span>
@@ -82,8 +107,8 @@
 						</div>
 					</div>
 
-					<div class="row" ng-show="showQuizzPrep">
-						<div class="col-10 showQuizz">
+					<div class="col-9" ng-show="showQuizzPrep">
+						<div class="showQuizz">
 							<div class="text-center mt-2 pb-5" style="height: 35%;">
 								<h1>{{leTheme}}</h1>
 								<h5>Auteur : {{auteur}}</h5>
@@ -104,32 +129,8 @@
 						</div>
 					</div>
 
-					<!-- Menu Defi -->
-					<div class="col-2" style="background-color: grey">
-						<button class="btn btn-dark btn-lg ButtSocial text" style="margin-left: 2em">Menu</button>
-						<div class="rounded social text-center">
-							<h2>Social</h2>
-							<md-list-item class="md-2-line md-no-proxy _md" role="listitem">
-			          			<div class="md-list-item-text" ng-repeat="elem in defis">
-			            			<h3 class="ng-binding">Blabla</h3>
-			            			<hr>
-			            			{{elem}}
-			          			</div>
-		          			</md-list-item>
-		        			<div class="md-secondary-container">	
-		        			</div>
-						</div>
-						<div class="rounded social social2 text-center">
-							<h2>Défi</h2>
-							<div>
-								<p>Score</p>
-							</div>
-						</div>
-					</div>
-					<!-- -->
-
 					<!-- ng-class="{ 'disabled': showNext}" -->
-					<div ng-show="showQuizz">
+					<div class="col-9"  ng-show="showQuizz">
 						<div class="text-center pb-3 showQuizz">
 								<h1>{{leTheme}}</h1>
 								<h5>Auteur : {{auteur}}</h5>
@@ -149,7 +150,7 @@
 							</div>
 						<button class="btn btn-dark btn-lg" ng-click="backHome()">Accueil</button>
 					</div>
-					<div ng-show="showResults">
+					<div class="col-9" ng-show="showResults">
 						<div class="text-center pb-5 showQuizz" style="height: 35%;">
 							<h1>{{leTheme}}</h1>
 							<h5>Auteur : {{auteur}}</h5>
@@ -157,11 +158,18 @@
 							<span>Bravo, vous avez réaliser ce quizz avec un score de : {{score}}</span><br>
 							<span>Vous avez réalisé ce quizz en un temps de {{tempsTotal}}ms</span><br>
 							<span>Rejouez pour avoir un meilleur score ! Ou vous pouvez choisir un autre quizz !</span><br>
-							<button class="btn btn-dark btn-lg" ng-click="defi()">Degeulasse</button>
+							<form class="form-inline" ng-init="getSocial()" ng-submit="defi()">
+							  <label class="mr-sm-2" for="inlineFormCustomSelect">Choisir personne : </label>
+							  <select class="custom-select mb-2 mr-sm-2 mb-sm-0" ng-change="changeId(idDefier)" ng-model="idDefier">
+							    <option ng-repeat="elem in users" value={{elem.id}}>{{elem.identifiant}}</option>
+							  </select>
+							  <button class="btn btn-dark btn-lg">Degeulasse</button>
+							 </form>
+
 							<button class="btn btn-dark btn-lg" ng-click="backHome()">Accueil</button>
 						</div>
 					</div>
-
+				</div>
 				</div>
 				<div class="col-2 text-center" style="background-color: grey" ng-controller="social" ng-init="getHistorique()">
 					<button class="btn btn-dark btn-lg ButtSocial text" ng-click="switchView()">{{menu}}</button>
