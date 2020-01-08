@@ -105,15 +105,18 @@
 					</div>
 
 					<!-- Menu Defi -->
-					<div class="col-2" style="background-color: grey">
+					<div class="col-2" style="background-color: grey" ng-init="getDefis()">
 						<button class="btn btn-dark btn-lg ButtSocial text" style="margin-left: 2em">Menu</button>
 						<div class="rounded social text-center">
 							<h2>Social</h2>
 							<md-list-item class="md-2-line md-no-proxy _md" role="listitem">
 			          			<div class="md-list-item-text" ng-repeat="elem in defis">
-			            			<h3 class="ng-binding">Blabla</h3>
 			            			<hr>
-			            			{{elem}}
+			            			{{elem[0].theme_quizz}}
+			            			{{elem[0].score_user_defiant}}
+			            			<button>Oui</button>
+			            			<button ng-click="defisRefus(elem)">Non</button>
+
 			          			</div>
 		          			</md-list-item>
 		        			<div class="md-secondary-container">	

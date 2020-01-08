@@ -63,7 +63,7 @@ app.post('/login', function(request, res) {
 			console.log('Erreur d’exécution de la requete' + err.stack);
 			res.status(500).send("Une erreur est survenue pendant la l'éxécution de la requête.");
 		}
-		else if((result.rows[0] != null) && (result.rows[0].motpasse == sha1(request.body.password))){
+		else if((result.rows[0] != null) && (result.rows[0].motpasse == sha1(request.body.password))){	//Si le mot de passe crypté est le même que BDD
 			//Connexion réussie
 			console.log("User Connected");
 
@@ -72,17 +72,17 @@ app.post('/login', function(request, res) {
 			request.session.username = request.body.username;
 			//console.log(request.session.id +' expire dans '+request.session.cookie.maxAge);
 			//io.emit('notification', { description: 'Connexion réussie !'});
-			notificationSend('Connexion réussie !');
+			notificationSend('Connexion réussie !');	//Web
 
 
-			statusOnline = "UPDATE fredouil.users SET statut = 1 where identifiant = '" + request.body.username + "';";
-			pool.query(statusOnline, (err, result) => {
-				if(err){
+			statusOnline = "UPDATE fredouil.users SET statut = 1 where identifiant = '" + request.body.username + "';";	//Préparation de la requête
+			pool.query(statusOnline, (err, result) => {	//Execution
+				if(err){	//Si faux, évacuation avec code d'erreur
 					console.log('Erreur d’exécution de la requete' + err.stack);
 					res.status(500).send("Une erreur est survenue pendant la l'éxécution de la requête.");
 				}
 			});
-			res.status(200).send({
+			res.status(200).send({	//Réussi
 					statusMsg: 'Vous êtes reconnu !',
 					statusResp: true,
 					data: request.session,
@@ -90,7 +90,7 @@ app.post('/login', function(request, res) {
 			});
 		}
 		else {
-			notificationSend('Pseudo/Mot de passe Inconnu !');
+			notificationSend('Pseudo/Mot de passe Inconnu !');	//Non reconnu, envoie d'une notification en websocket
 			res.status(403).send({
 					statusMsg: 'Pseudo/Mot de passe Inconnu !',
 					statusResp: false
@@ -101,27 +101,21 @@ app.post('/login', function(request, res) {
 	//pool.release();
 });
 
-app.get('/logout', function(request, res) {
-	if(request.session.isConnected == false)
+app.get('/logout', function(request, res) {	//Route pour se logout
+	if(request.session.isConnected == false)	//Si aucun log de connexion
 	{
 		res.status(401).send({
 					statusMsg: 'Non connecté !'
 			});
 	}
 	else {
-		//request.session.isConnected = false;
-
-		//console.log(request.session);
-		//request.session.cookie.maxAge = 0;
-		//request.session.cookie._expires = Date.now();
-		//console.log(request.session.cookie);
 		res.clearCookie('connect.sid', {path: '/'});
-		notificationSend('Vous êtes bien déconnécté !');
+		notificationSend('Vous êtes bien déconnécté !');	//Notification en web socket
 		/*io.emit('notification', { description: 'Vous êtes bien déconnécté !'});
 		notificationReset();*/
 		
-		statusOffline = "UPDATE fredouil.users SET statut = 0 where identifiant = '" + request.session.username + "';";
-		pool.query(statusOffline, (err, result) => {
+		statusOffline = "UPDATE fredouil.users SET statut = 0 where identifiant = '" + request.session.username + "';";	//Préparation de la requéte
+		pool.query(statusOffline, (err, result) => {	//Excecution
 			if(err){
 				console.log('Erreur d’exécution de la requete' + err.stack);
 				res.status(500).send("Une erreur est survenue pendant la l'éxécution de la requête.");
@@ -135,14 +129,13 @@ app.get('/logout', function(request, res) {
 	}
 });
 
-app.all('/', function(request, res) {
-	//res.sendFile(__dirname +'CERIGame/index.html');
+app.all('/', function(request, res) {						//Envoie le site (Coté client) lors de la connexion
 	res.sendFile('index.html');
 });
 
-app.get('/getQuizzs', function(request, res) {
+app.get('/getQuizzs', function(request, res) {	//Repertorie tous les quizz présent sur la base mongo
 	MongoClient.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true }, function(error, client) {
-	    if (error) 
+	    if (error) //Si problème
 	    {
 	    	throw error;
 	    	res.status(500).send();
@@ -150,9 +143,9 @@ app.get('/getQuizzs', function(request, res) {
 	    else
 	    {
 	    	const db = client.db("db");
-	    	db.collection("quizz").find({}).project({thème : 1}).toArray(function(err, results) {
+	    	db.collection("quizz").find({}).project({thème : 1}).toArray(function(err, results) {	//Cherche tous les quizz de la base quizz, et ne récupére que le champs thème
     			res.status(200).send({
-		    		quizz : results
+		    		quizz : results		//Envoie un code 200 et les résultats
 		   		});
 			});
 			client.close();
@@ -160,9 +153,9 @@ app.get('/getQuizzs', function(request, res) {
 	});
 });
 
-app.get('/getAuteur', function(request, res) {
+app.get('/getAuteur', function(request, res) {	//Permet de récupérer un autheur d'un thème donné en argument
 	MongoClient.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true }, function(error, client) {
-	    if (error) 
+	    if (error) 	//Si erreur
 	    {
 	    	throw error;
 	    	res.status(500).send();
@@ -170,21 +163,21 @@ app.get('/getAuteur', function(request, res) {
 	    else
 	    {
 			const db = client.db("db");
-			db.collection("quizz").find({thème : request.query.data}).project({rédacteur : 1}).toArray(function(err, results) {
-				res.status(200).send({
+			db.collection("quizz").find({thème : request.query.data}).project({rédacteur : 1}).toArray(function(err, results) { //Cherche en fonction du thème donné le rédacteur associé
+				res.status(200).send({	//Envoie code 200 plus résultats
 					auteur : results
 				});
 			});
 			client.close();
-			notificationSend('Auteur récupérer !');
+			notificationSend('Auteur récupérer !');	//Notification websocket
 		}
 	});
 
 });
 
-app.get('/getQuestions', function(request, res) {
+app.get('/getQuestions', function(request, res) {	//Renvoie le nombre questions associé au nombre passé en paramètre 
 	MongoClient.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true }, function(error, client) {
-	    if (error) 
+	    if (error) 	//Si erreur
 	    {
 	    	throw error;
 	    	res.status(500).send();
@@ -192,34 +185,26 @@ app.get('/getQuestions', function(request, res) {
 	    else
 	    {
 	    	const db = client.db("db");
-			db.collection("quizz").find({thème : request.query.theme}).project({quizz : 1}).toArray(function(err, results) {
+			db.collection("quizz").find({thème : request.query.theme}).project({quizz : 1}).toArray(function(err, results) {	//Recherche en fonction du quizz donné, ne prend que les questions
 				//console.log(results[0].quizz);
 
 				var ret = [];
 				var err = false;
-				//console.log(results[0].quizz.length);
-				ret.push(results[0].quizz[Math.floor(Math.random() * results[0].quizz.length) + 1.0]);
-				//console.log(ret[0].id);
+				ret.push(results[0].quizz[Math.floor(Math.random() * results[0].quizz.length) + 1.0]);	//partie choisisant au hasard les questions en évitant les doublons
 				while(ret.length != request.query.nbQuestions)
 				{
 					var num = Math.floor(Math.random() * results[0].quizz.length) + 1;
 					err = false;
 					for (var i = 0; i < ret.length; i++) {
-						//console.log(i + " i");
-						//console.log(ret.length + " len");
-						//console.log(ret[i]);
 						if(ret[i].id == num) { err = true; break; }
 					}
-					//console.log("------------------------------");
-					//console.log(ret);
-					//console.log(ret.length);
 					if(!err)
 					{
 						ret.push(results[0].quizz[num]);
 					}
 				}
 				res.status(200).send({
-					questions : ret
+					questions : return	//Renvoie le quizz randomisé
 				});
 			});
 			client.close();
@@ -227,24 +212,53 @@ app.get('/getQuestions', function(request, res) {
 	});
 });
 
-app.post('/addHistorique', function(request, res) {
+app.post('/addHistorique', function(request, res) {	//Permet d'ajouter un quizz à l'historique des quizzs
 	//console.log(request.body);
-	var sql = 'INSERT INTO fredouil.historique (id_users, date, nbreponse, temps, score)'
+	var sql = 'INSERT INTO fredouil.historique (id_users, date, nbreponse, temps, score)'	//Préparation de la requête
 	+ ' VALUES (' + request.body.id+', now(), '+request.body.nbRep+', '+request.body.temps +', '+ request.body.score +');';
 	pool.query(sql, (err, result) => {
 		//console.log(result.rows[0]); //DEBUG
-		if(err){
+		if(err){	//Si Problème
 			console.log('Erreur d’exécution de la requete ' + err.stack);
 			res.status(500).send("Une erreur est survenue pendant la l'éxécution de la requête.");
 		}
-		else { res.status(200).send(); }
+		else { res.status(200).send(); } //Tout est bon et la requete à aboutie
 	});
 });
 
-app.get('/getHistoriqueOf', function(request, res) {
+app.get('/getHistoriqueOf', function(request, res) {	//Retourne l'historique d'un utilisateur donné en paramètre
 	//console.log(request.query);
-	var sql = "SELECT * FROM fredouil.historique WHERE id_users = " + request.query.id + ";";
-	pool.query(sql, (err, result) => {
+	var sql = "SELECT * FROM fredouil.historique WHERE id_users = " + request.query.id + ";";	//Préparation de la requête
+	pool.query(sql, (err, result) => {	//Excécution
+		//console.log(result.rows[0]); //DEBUG
+		if(err){	//Si Problème
+			console.log('Erreur d’exécution de la requete' + err.stack);
+			res.status(500).send("Une erreur est survenue pendant la l'éxécution de la requête.");
+		}
+		else
+		{
+			res.status(200).send({	//Retourne le code 200 et l'historique des quizzs de l'utilisateur
+				data: result
+			});
+		}
+	});
+});
+
+app.post('/setHumeur', function(request, res) {	//permet de set l'humeur d'un utilisateur
+	var sql = "UPDATE fredouil.users SET humeur = '" + request.body.humeur + "' where id = " + request.body.id + ";";	//préparation de la requête
+	pool.query(sql, (err, result) => {	//Excécution
+		//console.log(result.rows[0]); //DEBUG
+		if(err){	//Si problème
+			console.log('Erreur d’exécution de la requete' + err.stack);
+			res.status(500).send("Une erreur est survenue pendant la l'éxécution de la requête.");
+		}
+		else { res.status(200).send(); } //Humeur set
+	});
+});
+
+app.get('/getHumeur', function(request, res) {	//récupére l'humeur d'un utilisateur
+	var sql = "SELECT humeur FROM fredouil.users WHERE id = " + request.query.id + ";";	//préparation de la requête
+	pool.query(sql, (err, result) => {	//Excécution
 		//console.log(result.rows[0]); //DEBUG
 		if(err){
 			console.log('Erreur d’exécution de la requete' + err.stack);
@@ -252,28 +266,16 @@ app.get('/getHistoriqueOf', function(request, res) {
 		}
 		else
 		{
-			res.status(200).send({
+			res.status(200).send({	//Humeur récupérée et retournée
 				data: result
 			});
 		}
 	});
 });
 
-app.post('/setHumeur', function(request, res) {
-	var sql = "UPDATE fredouil.users SET humeur = '" + request.body.humeur + "' where id = " + request.body.id + ";";
-	pool.query(sql, (err, result) => {
-		//console.log(result.rows[0]); //DEBUG
-		if(err){
-			console.log('Erreur d’exécution de la requete' + err.stack);
-			res.status(500).send("Une erreur est survenue pendant la l'éxécution de la requête.");
-		}
-		else { res.status(200).send(); }
-	});
-});
-
-app.get('/getHumeur', function(request, res) {
-	var sql = "SELECT humeur FROM fredouil.users WHERE id = " + request.query.id + ";";
-	pool.query(sql, (err, result) => {
+app.get('/getSocial', function(request, res) { //Obtient la totalitée des utilisateurs
+	var sql = "SELECT id, identifiant, humeur, statut FROM fredouil.users ORDER BY statut DESC NULLS LAST;";	//préparation de la requête
+	pool.query(sql, (err, result) => {	//Excécution
 		//console.log(result.rows[0]); //DEBUG
 		if(err){
 			console.log('Erreur d’exécution de la requete' + err.stack);
@@ -281,31 +283,14 @@ app.get('/getHumeur', function(request, res) {
 		}
 		else
 		{
-			res.status(200).send({
+			res.status(200).send({	//Social retourné
 				data: result
 			});
 		}
 	});
 });
 
-app.get('/getSocial', function(request, res) {
-	var sql = "SELECT identifiant, humeur, statut FROM fredouil.users ORDER BY statut DESC NULLS LAST;";
-	pool.query(sql, (err, result) => {
-		//console.log(result.rows[0]); //DEBUG
-		if(err){
-			console.log('Erreur d’exécution de la requete' + err.stack);
-			res.status(500).send("Une erreur est survenue pendant la l'éxécution de la requête.");
-		}
-		else
-		{
-			res.status(200).send({
-				data: result
-			});
-		}
-	});
-});
-
-app.post('/defi', function(request, res) {
+app.post('/defi', function(request, res) {	//Post un défis
 	//console.log(request.body);
 	MongoClient.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true }, function(error, client) {
 	    if (error) 
@@ -327,7 +312,7 @@ app.post('/defi', function(request, res) {
 
 });
 
-app.get('/getHistDefis', function(request, res) {
+app.get('/getHistDefis', function(request, res) {	//Obtiens l'historique des défis d'un user
 	var sql = "SELECT * FROM fredouil.hist_defi WHERE id_users_gagnant = " + request.query.id + " OR id_users_perdant = " + request.query.id + " ;";
 	pool.query(sql, (err, result) => {
 		//console.log(result.rows[0]); //DEBUG
@@ -344,8 +329,8 @@ app.get('/getHistDefis', function(request, res) {
 	});
 });
 
-app.get('/getDefis', function(request, res) {
-	//console.log(request.params);
+app.get('/getDefis', function(request, res) {	//permet d'avoir les défis actifs d'un user
+	console.log(request.query);
 	MongoClient.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true }, function(error, client) {
 	    if (error) 
 	    {
@@ -354,8 +339,10 @@ app.get('/getDefis', function(request, res) {
 	    }
 	    else
 	    {
+	    	var querry = { id_user_defie : parseInt(request.query.user_id, 10) };
 	    	const db = client.db("db");
-			db.collection("defis").find({id_defie : request.params.user_id}).toArray(function(err, results) {
+			db.collection("defis").find(querry).toArray(function(err, results) {
+				console.log(results);
 				res.status(200).send({
 					data : results
 				});
@@ -365,7 +352,7 @@ app.get('/getDefis', function(request, res) {
 	});
 });
 
-app.get('/defiRefus', function(request, res) {
+app.get('/defiRefus', function(request, res) {	//refuse un défis
 	MongoClient.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true }, function(error, client) {
 	    if (error) 
 	    {
@@ -374,8 +361,10 @@ app.get('/defiRefus', function(request, res) {
 	    }
 	    else
 	    {
+	    	var querry = { id_user_defie : parseInt(request.query.defie_id, 10), id_user_defiant : parseInt(request.query.defiant_id, 10) };
+	    	console.log(querry);
 	    	const db = client.db("db");
-			dbo.collection("defis").deleteOne({ id_user_defie : request.params.defie_id, id_user_defiant : request.params.defiant_id } function(err, obj) {
+			db.collection("defis").deleteOne(querry, function(err, obj) {
 				notificationSend("Défis rejeté !");
 				res.status(200).send();
 				client.close();
@@ -402,7 +391,7 @@ http.listen(3154 , function() {
 	console.log('listening 3154');
 });
 
-function notificationSend(data)
+function notificationSend(data)	//Automatisation des webs sockets
 {
 	io.emit('notification', {description: data});
 	setTimeout(function() {

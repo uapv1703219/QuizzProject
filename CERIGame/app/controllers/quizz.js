@@ -197,22 +197,27 @@ angular.module('Quizz').controller('quizz', ['$scope', 'webSocket', '$http', fun
 		return ret.sort(() => Math.random() - 0.5);
 	}
 
-	$scope.defisRefus = function(data) {
-		$http
-		.get("/defiRefus", { params: {'defie_id' : }})
-	}
-
-	setInterval(function() {
-		console.log('5sec');
+	$scope.getDefis = function() {
 		$http
 		.get('/getDefis', { params: {'user_id': localStorage.getItem('id')} })
 		.then(function(response) {
-			/*if($scope.defis != response.data)
-			{
-				webSocket.emit(defis, response.data)
-			}*/
 			$scope.defis = response.data;
-			console.log($scope.defis);
+		});
+	}
+
+	$scope.defisRefus = function(data) {
+		$http
+		.get("/defiRefus", { params: {'defie_id' : data[0].id_user_defie, 'defiant_id': data[0].id_user_defiant} })
+		.then(function(result) {
+			$scope.getDefis();
+		});
+	}
+
+	setInterval(function() {
+		$http
+		.get('/getDefis', { params: {'user_id': localStorage.getItem('id')} })
+		.then(function(response) {
+			$scope.defis = response.data;
 		});
 	}, 5000);
 }]);
