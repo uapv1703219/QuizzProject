@@ -23,21 +23,12 @@
 			<div class="row align-items-center bandeau">
 				<div class="col-lg-3 offset-md-1 fixed-top" ng-controller="bandeau" >
 					<span class="bandeau2 success" ng-show="showNotification">Notification : {{message}} </span>
-					<button ng-click="test()">TEST</button>
 				</div>
 				<div class="col">
 					<p class="title text-center mb-0">THE CERIGAME</p>
 				</div>
 				<div class="col-3" ng-controller="login" ng-init="load(); getHumeur()">
 					<div ng-hide="isLogged">
-						<!--<form ng-submit="login()">
-							<label for="username">Pseudo :</label>
-							<input class="" type="text" name="username" ng-model="username" placeholder="Username"> <br>
-							<label for="mdp">Password :</label>
-							<input type="password" name="password" ng-model="password" placeholder="Password"> <br>
-							<input class="btn btn-dark mb-1" type="submit" value="Go!">
-						</form>-->
-
 						<form ng-submit="login()" class="form-horizontal" style="margin-top: 1em;">
 							<div class="form-group row">
 								<label class="col-3 col-form-label" for="username">Pseudo </label>
@@ -57,15 +48,17 @@
 						</form>
 
 					</div>
-					<div ng-show="isLogged">
-						<p>Pseudo : {{user}}</p>
-						<p>Humeur : {{humeur}}</p>
+					<div ng-show="isLogged" style="margin-top: 1em;" class="row flex">
+						<span>Pseudo : {{user}}</span>
+						<div > 
+							<span class="align-items-center"> Humeur : </span>
+							<form ng-submit="setHumeur()">
+								<input type="text" ng-model="humeur">
+								<input class="btn btn-dark mb-1" type="submit" value="Set">
+							</form>
+						</div>
 						<p class="annotation">Dernière connexion : {{lastConnexion}}</p>
 						<button class="btn btn-dark mb-1" ng-click="logout()">Logout</button>
-						<form ng-submit="setHumeur()">
-							<input class="" type="text" name="humeurTxt" ng-model="humeurTxt" placeholder="D'humeur changeante ?">
-							<input class="btn btn-dark mb-1" type="submit" value="Set">
-						</form>
 					</div>
 				</div>
 			</div>
@@ -83,9 +76,28 @@
 					</div>
 
 					<div class="row" ng-show="showQuizzPrep">
-						<div class="col social" style="background-color: grey">
-							<h1 class="align-middle">Coming sOOn</h1>
+						<div class="col-2" style="background-color: grey">
+							<button class="btn btn-dark btn-lg ButtSocial text" style="margin-left: 2em">Menu</button>
+							<div class="rounded social text-center" ng-show="" ng-init="">
+								<h2>Social</h2>
+								<md-list-item class="md-2-line md-no-proxy _md" role="listitem">
+			          				<div class="md-list-item-text">
+			            				<h3 class="ng-binding">Blabla</h3>
+			            				<p>papa</p>
+			            				<hr>
+			          				</div>
+		          				</md-list-item>
+		        				<div class="md-secondary-container">	
+		        				</div>
+							</div>
+							<div class="rounded social social2 text-center">
+								<h2>Défi</h2>
+								<div>
+									<p>Score</p>
+								</div>
+							</div>
 						</div>
+
 						<div class="col-10 showQuizz">
 							<div class="text-center mt-2 pb-5" style="height: 35%;">
 								<h1>{{leTheme}}</h1>
@@ -155,10 +167,8 @@
 	            				<hr>
 	          				</div>
           				</md-list-item>
-        			<div class="md-secondary-container">
-        				
-        			</div>
-        			</md-list-item>
+        				<div class="md-secondary-container">	
+        				</div>
 					</div>
 					<div class="rounded social text-center" ng-show="showHistorique">
 						<h2>Historique</h2>
