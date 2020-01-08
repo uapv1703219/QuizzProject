@@ -1,4 +1,4 @@
-angular.module('Quizz').controller('quizz', ['$scope', '$http', function($scope,  $http){
+angular.module('Quizz').controller('quizz', ['$scope', 'webSocket', '$http', function($scope, webSocket,  $http){
 
 	$scope.showSelect = true;
 	$scope.showQuizzPrep = false;
@@ -29,6 +29,9 @@ angular.module('Quizz').controller('quizz', ['$scope', '$http', function($scope,
 	var tempsBegin;
 	var tempsEnd;
 	$scope.tempsTotal = 0;
+
+	$scope.defis = null;
+	$scope.hist_defis = null;
 
 	$scope.getQuizz = function() {
 		$http
@@ -193,4 +196,18 @@ angular.module('Quizz').controller('quizz', ['$scope', '$http', function($scope,
 		
 		return ret.sort(() => Math.random() - 0.5);
 	}
+
+	setInterval(function() {
+		console.log('5sec');
+		$http
+		.get('/getDefis', { params: {'user_id': localStorage.getItem('id')} })
+		.then(function(response) {
+			/*if($scope.defis != response.data)
+			{
+				webSocket.emit(defis, response.data)
+			}*/
+			$scope.defis = response.data;
+			console.log($scope.defis);
+		});
+	}, 5000);
 }]);

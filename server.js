@@ -316,7 +316,8 @@ app.post('/defi', function(request, res) {
 	    else
 	    {
 	    	const db = client.db("db");
-	    	db.collection("quizz").insertOne(request.body, function(err, result) {
+	    	db.collection("defis").insertOne(request.body, function(err, result) {
+	    		if (err) throw err;
     			res.status(201).send();
 			});
 			client.close();
@@ -339,6 +340,27 @@ app.get('/getHistDefis', function(request, res) {
 			res.status(200).send({
 				data: result
 			});
+		}
+	});
+});
+
+app.get('/getDefis', function(request, res) {
+	//console.log(request.params);
+	MongoClient.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true }, function(error, client) {
+	    if (error) 
+	    {
+	    	throw error;
+	    	res.status(500).send();
+	    }
+	    else
+	    {
+	    	const db = client.db("db");
+			db.collection("defis").find({id_defie : request.params.user_id}).toArray(function(err, results) {
+				res.status(200).send({
+					data : results
+				});
+			});
+			client.close();
 		}
 	});
 });
