@@ -5,6 +5,19 @@ angular.module('Quizz').controller('bandeau', ['$scope', 'webSocket', '$http',  
 	$scope.disparition = false;
 
 	$scope.test = function(){
+		$http
+		.post('/defi', {'id_user_defiant': 29,
+						'id_user_defie': 29,
+						'score_user_defiant': 100,
+						'theme_quizz' : "Star Wars"});
+
+		/*$http
+		.get('/getHistDefis', {
+			params: {id: localStorage.getItem('id')}
+		})
+		.then(function(response) {
+			console.log(response);
+		});*/
 	}
 
 	$scope.returnNotification = function(){

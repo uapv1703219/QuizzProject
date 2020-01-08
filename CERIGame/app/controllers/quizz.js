@@ -1,4 +1,4 @@
-angular.module('Quizz').controller('quizz', ['$scope', '$http', function($scope,  $http){
+angular.module('Quizz').controller('quizz', ['$scope', 'webSocket', '$http', function($scope, webSocket,  $http){
 
 	$scope.showSelect = true;
 	$scope.showQuizzPrep = false;
@@ -29,6 +29,7 @@ angular.module('Quizz').controller('quizz', ['$scope', '$http', function($scope,
 	var tempsBegin;
 	var tempsEnd;
 	$scope.tempsTotal = 0;
+
 
 	$scope.users = null;
 	$scope.idDefier = 0;
@@ -199,7 +200,7 @@ angular.module('Quizz').controller('quizz', ['$scope', '$http', function($scope,
 		
 		return ret.sort(() => Math.random() - 0.5);
 	}
-
+  
 	$scope.getSocial = function(){
 		$http
 		.get('/getSocial')
@@ -213,4 +214,28 @@ angular.module('Quizz').controller('quizz', ['$scope', '$http', function($scope,
 	$scope.changeId = function(data){
 		$scope.idDefier = data;
 	}
+
+	$scope.getDefis = function() {
+		$http
+		.get('/getDefis', { params: {'user_id': localStorage.getItem('id')} })
+		.then(function(response) {
+			$scope.defis = response.data;
+		});
+	}
+
+	$scope.defisRefus = function(data) {
+		$http
+		.get("/defiRefus", { params: {'defie_id' : data[0].id_user_defie, 'defiant_id': data[0].id_user_defiant} })
+		.then(function(result) {
+			$scope.getDefis();
+		});
+	}
+
+	setInterval(function() {
+		$http
+		.get('/getDefis', { params: {'user_id': localStorage.getItem('id')} })
+		.then(function(response) {
+			$scope.defis = response.data;
+		});
+	}, 5000);
 }]);

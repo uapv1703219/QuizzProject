@@ -129,6 +129,34 @@
 						</div>
 					</div>
 
+
+					<!-- Menu Defi -->
+					<div class="col-2" style="background-color: grey" ng-init="getDefis()">
+						<button class="btn btn-dark btn-lg ButtSocial text" style="margin-left: 2em">Menu</button>
+						<div class="rounded social text-center">
+							<h2>Social</h2>
+							<md-list-item class="md-2-line md-no-proxy _md" role="listitem">
+			          			<div class="md-list-item-text" ng-repeat="elem in defis">
+			            			<hr>
+			            			{{elem[0].theme_quizz}}
+			            			{{elem[0].score_user_defiant}}
+			            			<button>Oui</button>
+			            			<button ng-click="defisRefus(elem)">Non</button>
+
+			          			</div>
+		          			</md-list-item>
+		        			<div class="md-secondary-container">	
+		        			</div>
+						</div>
+						<div class="rounded social social2 text-center">
+							<h2>Défi</h2>
+							<div>
+								<p>Score</p>
+							</div>
+						</div>
+					</div>
+					<!-- -->
+
 					<!-- ng-class="{ 'disabled': showNext}" -->
 					<div class="col-9"  ng-show="showQuizz">
 						<div class="text-center pb-3 showQuizz">
