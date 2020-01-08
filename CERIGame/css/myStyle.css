@@ -112,3 +112,7 @@ img:after {
   width: 100%;
   text-align: center;
 }
+
+.img-fluid{
+  max-width: 80%;
+}
