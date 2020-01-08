@@ -48,18 +48,25 @@
 						</form>
 
 					</div>
-					<div ng-show="isLogged" style="margin-top: 1em;" class="row flex">
-						<span>Pseudo : {{user}}</span>
-						<div > 
-							<span class="align-items-center"> Humeur : </span>
-							<form ng-submit="setHumeur()">
-								<input type="text" ng-model="humeur">
-								<input class="btn btn-dark mb-1" type="submit" value="Set">
-							</form>
+					<form ng-submit="setHumeur()" class="form-horizontal" style="margin-top: 1em;">
+						<div class="form-group row">
+							<label class="col-3 col-form-label" for="username">Pseudo: </label>
+							<label class="col-sm-6 col-form-label"> {{user}} </label>
 						</div>
-						<p class="annotation">Dernière connexion : {{lastConnexion}}</p>
-						<button class="btn btn-dark mb-1" ng-click="logout()">Logout</button>
-					</div>
+						<div class="form-group row">
+							<label for="mdp" class="col-3 col-form-label">Humeur:</label>
+							<div class="col-sm-6">
+								<input type="text" class="form-control" ng-model="humeur">
+							</div>
+							<input class="btn btn-dark mb-1" type="submit" value="Set!">
+						</div>
+						<div class="form-group row">
+							<span class="col-10 annotation">Dernière connexion : {{lastConnexion}}</span>
+						</div>		
+						<div class="form-group">
+							<button class="btn btn-dark mb-1" ng-click="logout()">Logout</button>
+						</div>
+					</form>
 				</div>
 			</div>
 			<div class="row">
@@ -76,28 +83,6 @@
 					</div>
 
 					<div class="row" ng-show="showQuizzPrep">
-						<div class="col-2" style="background-color: grey">
-							<button class="btn btn-dark btn-lg ButtSocial text" style="margin-left: 2em">Menu</button>
-							<div class="rounded social text-center" ng-show="" ng-init="">
-								<h2>Social</h2>
-								<md-list-item class="md-2-line md-no-proxy _md" role="listitem">
-			          				<div class="md-list-item-text">
-			            				<h3 class="ng-binding">Blabla</h3>
-			            				<p>papa</p>
-			            				<hr>
-			          				</div>
-		          				</md-list-item>
-		        				<div class="md-secondary-container">	
-		        				</div>
-							</div>
-							<div class="rounded social social2 text-center">
-								<h2>Défi</h2>
-								<div>
-									<p>Score</p>
-								</div>
-							</div>
-						</div>
-
 						<div class="col-10 showQuizz">
 							<div class="text-center mt-2 pb-5" style="height: 35%;">
 								<h1>{{leTheme}}</h1>
@@ -119,10 +104,33 @@
 						</div>
 					</div>
 
+					<!-- Menu Defi -->
+					<div class="col-2" style="background-color: grey">
+						<button class="btn btn-dark btn-lg ButtSocial text" style="margin-left: 2em">Menu</button>
+						<div class="rounded social text-center">
+							<h2>Social</h2>
+							<md-list-item class="md-2-line md-no-proxy _md" role="listitem">
+			          			<div class="md-list-item-text" ng-repeat="elem in defis">
+			            			<h3 class="ng-binding">Blabla</h3>
+			            			<hr>
+			            			{{elem}}
+			          			</div>
+		          			</md-list-item>
+		        			<div class="md-secondary-container">	
+		        			</div>
+						</div>
+						<div class="rounded social social2 text-center">
+							<h2>Défi</h2>
+							<div>
+								<p>Score</p>
+							</div>
+						</div>
+					</div>
+					<!-- -->
 
 					<!-- ng-class="{ 'disabled': showNext}" -->
 					<div ng-show="showQuizz">
-						<div class="text-center pb-5 showQuizz">
+						<div class="text-center pb-3 showQuizz">
 								<h1>{{leTheme}}</h1>
 								<h5>Auteur : {{auteur}}</h5>
 								<div class="progress">
